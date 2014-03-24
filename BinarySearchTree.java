@@ -151,9 +151,25 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
      */
 
     public LinkedList<K> keys() {
-
-        throw new UnsupportedOperationException( "Replace this statement by your answer to the question!" );
-    
+        LinkedList<K> keyList = new LinkedList<K>();
+        LinkedList<Node<K,V>> nodeList = new LinkedList<Node<K,V>>();
+        Node<K,V> curNode;
+        if (root == null)
+            return keyList;
+        nodeList.addLast(root);
+        Iterator<Node<K,V>> iter = nodeList.iterator();
+        while (iter.hasNext()) {
+            curNode = iter.next();
+            if (curNode.right != null)
+                iter.add(curNode.right);
+            if (curNode.left != null)
+                iter.add(curNode.left);
+        }
+        iter = nodeList.iterator();
+        while (iter.hasNext()) {
+            keyList.addLast(iter.next().key);
+        }
+        return keyList;
     }
 
     /** Returns the list of value in the order specified by the method compareTo of the key
@@ -163,9 +179,22 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
      */
 
     public LinkedList<V> values() {
-      
-        throw new UnsupportedOperationException( "Replace this statement by your answer to the question!" );
-
+        LinkedList<V> valueList = new LinkedList<V>();
+        LinkedList<Node<K,V>> nodeList = new LinkedList<Node<K,V>>();
+        Node<K,V> curNode;
+        if (root == null)
+            return valueList;
+        nodeList.addLast(root);
+        while (nodeList.size() > 0) {
+            curNode = nodeList.get(0);
+            nodeList.remove(curNode);
+            if (curNode.right != null)
+                nodeList.addFirst(curNode.right);
+            if (curNode.left != null)
+                nodeList.addFirst(curNode.left);
+            valueList.addLast(curNode.value);
+        }
+        return valueList;
     }
 
     /** Returns the path length of the node containg specified key.  Let
@@ -179,9 +208,31 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
      */
   
     public int getPathLength( K obj ) {
-
-        throw new UnsupportedOperationException( "Replace this statement by your answer to the question!" );
-
+        int len = 0, l;
+        Node<K,V> curNode;
+        LinkedList<Node<K,V>> curList, nextList;
+        if (root == null)
+            return -1;
+        curList = new LinkedList<Node<K,V>>();
+        curList.addLast(root);
+        while (true) {
+            Iterator<Node<K,V>> iter = curList.iterator();
+            nextList = new LinkedList<Node<K,V>>();
+            while (iter.hasNext()) {
+                curNode = iter.next();
+                if (curNode.key.equals(obj))
+                    return len;
+                if (curNode.left != null)
+                    nextList.addLast(curNode.left);
+                if (curNode.right != null)
+                    nextList.addLast(curNode.right);
+            }
+            len++;
+            curList = nextList;
+            if (nextList.size() == 0)
+                break;
+        }
+        return -1;
     }
 
     /** Returns a String representation of the tree.
