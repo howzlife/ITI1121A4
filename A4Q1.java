@@ -4,6 +4,9 @@ class A4Q1 {
         Object o1, o2;
         Iterator i1, i2;
 
+        if (l1 == null || l2 == null)
+            return l1 == l2;
+
         i1 = l1.iterator();
         i2 = l2.iterator();
         while (i1.hasNext() && i2.hasNext()) {

@@ -41,7 +41,7 @@ public class RunTests {
         suite.addTestSuite( TestIteratorPrevious.class );
         suite.addTestSuite( TestIteratorRemove.class );
         suite.addTestSuite( TestTake.class );
-        suite.addTestSuite( TestA4Q6.class );
+        /*suite.addTestSuite( TestA4Q6.class );*/
         suite.addTestSuite( TestKeysAndValues.class );
         suite.addTestSuite( TestGetPathLength.class );
         suite.addTestSuite( TestDistance.class );

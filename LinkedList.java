@@ -61,7 +61,7 @@ public class LinkedList<E> {
         public void add( E elem ) {
 
             checkConcurrentModification();
-      
+
             if ( elem == null ) {
         	throw new IllegalArgumentException();
             }
@@ -91,6 +91,7 @@ public class LinkedList<E> {
         	throw new NoSuchElementException();
             }
       
+
             current = current.previous; // move the cursor backward
       
             return current.value;
@@ -106,8 +107,10 @@ public class LinkedList<E> {
             current.next = null;
             before = current.previous;
             current.previous = null;
-            before.next = after;
-            after.previous = before;
+            if (before != null)
+                before.next = after;
+            if (after != null)
+                after.previous = before;
 
             // Updating variables
             expectedModCount--;

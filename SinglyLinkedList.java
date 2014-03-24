@@ -45,20 +45,21 @@ public class SinglyLinkedList<E> {
         }
         sll.addFirst(end.value);
 
-        return sll.take(n-1);
+        return sll.take(sll, n-1);
     }
 
     public SinglyLinkedList<E> take( int n ) {
         SinglyLinkedList<E> sll;
         Node<E> end;
         
+        sll = new SinglyLinkedList<E>();
         end = first;
         for (int i=n;i>0;i--) {
             end = end.next;
         }
         sll.addFirst(end.value);
 
-        return sll.take(n-1);
+        return sll.take(sll, n-1);
     }
 
     //  ----------------------------------------------------------
