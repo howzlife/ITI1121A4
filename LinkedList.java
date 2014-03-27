@@ -81,10 +81,11 @@ public class LinkedList<E> {
         }
 
         public boolean hasPrevious() {
-            return current.previous != head;
+            return current != head;
         }
     
         public E previous() {
+            Node<E> prev;
             checkConcurrentModification();
 
             if ( current.previous == head ) {
@@ -92,9 +93,10 @@ public class LinkedList<E> {
             }
       
 
+            prev = current;
             current = current.previous; // move the cursor backward
       
-            return current.value;
+            return prev.value;
         }
     
         public void remove() {
@@ -103,14 +105,19 @@ public class LinkedList<E> {
 
             checkConcurrentModification();
 
+            if (current == head) {
+                throw new IllegalArgumentException();
+            }
+
             after = current.next;
             current.next = null;
             before = current.previous;
             current.previous = null;
-            if (before != null)
-                before.next = after;
-            if (after != null)
-                after.previous = before;
+
+            //if (before != null) Note - circular list, so this will never apply
+            before.next = after;
+            // if (after != null) Note - circular list, so this will never apply
+            after.previous = before;
 
             // Updating variables
             expectedModCount--;

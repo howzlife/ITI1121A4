@@ -35,8 +35,9 @@ public class SinglyLinkedList<E> {
     private SinglyLinkedList<E> take(SinglyLinkedList<E> sll, int n) {
         Node<E> end;
 
-        if (n == 0) {
-            return sll;
+        if (n < 0) throw new IllegalArgumentException();
+        if (n == 0 || isEmpty()) {
+            return  sll;
         }
 
         end = first;

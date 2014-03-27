@@ -4,6 +4,7 @@ class A4Q1 {
         Object o1, o2;
         Iterator i1, i2;
 
+        //check if either is null. If both are null, returns true. Returns false otherwise
         if (l1 == null || l2 == null)
             return l1 == l2;
 
