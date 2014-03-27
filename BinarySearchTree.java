@@ -160,10 +160,14 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
         Iterator<Node<K,V>> iter = nodeList.iterator();
         while (iter.hasNext()) {
             curNode = iter.next();
-            if (curNode.right != null)
+            if (curNode.right != null) {
                 iter.add(curNode.right);
-            if (curNode.left != null)
+                iter.previous();
+            }
+            if (curNode.left != null) {
                 iter.add(curNode.left);
+                iter.previous();
+            }
         }
         iter = nodeList.iterator();
         while (iter.hasNext()) {
@@ -185,14 +189,21 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
         if (root == null)
             return valueList;
         nodeList.addLast(root);
-        while (nodeList.size() > 0) {
-            curNode = nodeList.get(0);
-            nodeList.remove(curNode);
-            if (curNode.right != null)
-                nodeList.addFirst(curNode.right);
-            if (curNode.left != null)
-                nodeList.addFirst(curNode.left);
-            valueList.addLast(curNode.value);
+        Iterator<Node<K,V>> iter = nodeList.iterator();
+        while (iter.hasNext()) {
+            curNode = iter.next();
+            if (curNode.right != null) {
+                iter.add(curNode.right);
+                iter.previous();
+            }
+            if (curNode.left != null) {
+                iter.add(curNode.left);
+                iter.previous();
+            }
+        }
+        iter = nodeList.iterator();
+        while (iter.hasNext()) {
+            valueList.addLast(iter.next().value);
         }
         return valueList;
     }
@@ -213,6 +224,8 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
         LinkedList<Node<K,V>> curList, nextList;
         if (root == null)
             return -1;
+        if (obj == null)
+            throw new IllegalArgumentException();
         curList = new LinkedList<Node<K,V>>();
         curList.addLast(root);
         while (true) {

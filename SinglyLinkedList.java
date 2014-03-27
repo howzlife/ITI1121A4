@@ -32,21 +32,20 @@ public class SinglyLinkedList<E> {
         return first == null; 
     }
 
-    private SinglyLinkedList<E> take(SinglyLinkedList<E> sll, int n) {
+    private SinglyLinkedList<E> take(SinglyLinkedList<E> sll, int n, Node<E> f) {
         Node<E> end;
 
-        if (n < 0) throw new IllegalArgumentException();
-        if (n == 0 || isEmpty()) {
+        if (n == 0) {
             return  sll;
         }
 
-        end = first;
-        for (int i=n;i>0;i--) {
+        end = f;
+        for (int i=n;i>1;i--) {
             end = end.next;
         }
         sll.addFirst(end.value);
 
-        return sll.take(sll, n-1);
+        return sll.take(sll, n-1, f);
     }
 
     public SinglyLinkedList<E> take( int n ) {
@@ -54,13 +53,17 @@ public class SinglyLinkedList<E> {
         Node<E> end;
         
         sll = new SinglyLinkedList<E>();
+        if (n == 0) {
+            return sll;
+        }
+
         end = first;
-        for (int i=n;i>0;i--) {
+        for (int i=n;i>1;i--) {
             end = end.next;
         }
         sll.addFirst(end.value);
 
-        return sll.take(sll, n-1);
+        return sll.take(sll, n-1, first);
     }
 
     //  ----------------------------------------------------------
