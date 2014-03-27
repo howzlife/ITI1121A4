@@ -152,23 +152,42 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
 
     public LinkedList<K> keys() {
         LinkedList<K> keyList = new LinkedList<K>();
-        LinkedList<Node<K,V>> nodeList = new LinkedList<Node<K,V>>();
-        Node<K,V> curNode;
-        if (root == null)
+        LinkedList<Node<K,V>> nodeList, rightList;
+        Node<K,V> curNode, rightNode;
+        Iterator<Node<K,V>> iter;
+
+        nodeList = new LinkedList<Node<K,V>>();
+        rightList = new LinkedList<Node<K,V>>();
+        if (root == null) {
             return keyList;
+        }
+
         nodeList.addLast(root);
-        Iterator<Node<K,V>> iter = nodeList.iterator();
+        iter = nodeList.iterator();
         while (iter.hasNext()) {
             curNode = iter.next();
-            if (curNode.right != null) {
-                iter.add(curNode.right);
-                iter.previous();
-            }
             if (curNode.left != null) {
+                if (curNode.right != null) {
+                    rightList.addLast(curNode.right);
+                    iter.add(curNode.right);
+                    iter.previous();
+                }
+                iter.previous();
                 iter.add(curNode.left);
+                iter.previous();
+            } else if (curNode.right != null) {
+                    iter.add(curNode.right);
+                    iter.previous();
+            } else if (!rightList.isEmpty()){
+                rightNode = rightList.get(0);
+                rightList.remove(rightNode);
+                do {
+                    curNode = iter.next();
+                } while (curNode != rightNode);
                 iter.previous();
             }
         }
+
         iter = nodeList.iterator();
         while (iter.hasNext()) {
             keyList.addLast(iter.next().key);
@@ -184,23 +203,42 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
 
     public LinkedList<V> values() {
         LinkedList<V> valueList = new LinkedList<V>();
-        LinkedList<Node<K,V>> nodeList = new LinkedList<Node<K,V>>();
-        Node<K,V> curNode;
-        if (root == null)
+        LinkedList<Node<K,V>> nodeList, rightList;
+        Node<K,V> curNode, rightNode;
+        Iterator<Node<K,V>> iter;
+
+        nodeList = new LinkedList<Node<K,V>>();
+        rightList = new LinkedList<Node<K,V>>();
+        if (root == null) {
             return valueList;
+        }
+
         nodeList.addLast(root);
-        Iterator<Node<K,V>> iter = nodeList.iterator();
+        iter = nodeList.iterator();
         while (iter.hasNext()) {
             curNode = iter.next();
-            if (curNode.right != null) {
-                iter.add(curNode.right);
-                iter.previous();
-            }
             if (curNode.left != null) {
+                if (curNode.right != null) {
+                    rightList.addLast(curNode.right);
+                    iter.add(curNode.right);
+                    iter.previous();
+                }
+                iter.previous();
                 iter.add(curNode.left);
+                iter.previous();
+            } else if (curNode.right != null) {
+                    iter.add(curNode.right);
+                    iter.previous();
+            } else if (!rightList.isEmpty()){
+                rightNode = rightList.get(0);
+                rightList.remove(rightNode);
+                do {
+                    curNode = iter.next();
+                } while (curNode != rightNode);
                 iter.previous();
             }
         }
+
         iter = nodeList.iterator();
         while (iter.hasNext()) {
             valueList.addLast(iter.next().value);

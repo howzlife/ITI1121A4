@@ -57,8 +57,15 @@ public class SinglyLinkedList<E> {
             return sll;
         }
 
+        if (n < 0) {
+            throw new IllegalArgumentException();
+        }
+
         end = first;
         for (int i=n;i>1;i--) {
+            if (end.next == null) {
+                throw new IllegalArgumentException();
+            }
             end = end.next;
         }
         sll.addFirst(end.value);
