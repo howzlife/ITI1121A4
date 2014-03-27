@@ -46,7 +46,7 @@ public class LinkedList<E> {
             checkConcurrentModification();
       
             if ( current.next == head ) {
-        	throw new NoSuchElementException();
+         throw new NoSuchElementException();
             }
       
             current = current.next ; // move the cursor forward
@@ -63,7 +63,7 @@ public class LinkedList<E> {
             checkConcurrentModification();
 
             if ( elem == null ) {
-        	throw new IllegalArgumentException();
+         throw new IllegalArgumentException();
             }
 
             Node<E> after = current.next;
@@ -81,20 +81,26 @@ public class LinkedList<E> {
         }
 
         public boolean hasPrevious() {
-            return current.previous != head;
+          if (current == head) return false;
+          return true;
         }
     
         public E previous() {
             checkConcurrentModification();
 
-            if ( current.previous == head ) {
-        	throw new NoSuchElementException();
+            Node<E> p = head;
+            
+            if ( !hasPrevious()) {
+         throw new NoSuchElementException();
             }
+            
+            while (p.next != current.previous) {
+              p = p.next;
+            }
+            
+            current = p.next; // move the cursor backward
       
-
-            current = current.previous; // move the cursor backward
-      
-            return current.value;
+            return current.next.value;
         }
     
         public void remove() {
@@ -102,14 +108,19 @@ public class LinkedList<E> {
             Node<E> before;
 
             checkConcurrentModification();
-
+            
+            if (current == head) {
+             throw new IllegalArgumentException(); 
+            }
+            
             after = current.next;
             current.next = null;
             before = current.previous;
             current.previous = null;
-            if (before != null)
+            
+            //if (before != null) Note - circular list, so this will never apply. 
                 before.next = after;
-            if (after != null)
+           // if (after != null) Note - circular list, so this will never apply
                 after.previous = before;
 
             // Updating variables
@@ -120,7 +131,7 @@ public class LinkedList<E> {
     
         private void checkConcurrentModification() {
             if ( expectedModCount != modCount ) {
-        	throw new ConcurrentModificationException();
+         throw new ConcurrentModificationException();
             }
         }
     }
@@ -199,7 +210,7 @@ public class LinkedList<E> {
         Node<E> after = head;
     
         before.next = new Node<E>( obj, before, after );
-        after.previous = before.next;
+        head.previous = before.next;
     
         modCount++;
         size++;
@@ -275,25 +286,25 @@ public class LinkedList<E> {
       
             if ( o.equals( current.value ) ) {
         
-        	found = true;
+         found = true;
         
-        	Node<E> left = current.previous;
-        	Node<E> right = current.next;
+         Node<E> left = current.previous;
+         Node<E> right = current.next;
         
-        	// removing the element from the list;
+         // removing the element from the list;
         
-        	left.next = right;
-        	right.previous = left;
+         left.next = right;
+         right.previous = left;
         
-        	// ``scrubbing the memory''
+         // ``scrubbing the memory''
         
-        	current.value = null;
-        	current.previous = null;
-        	current.next = null;
+         current.value = null;
+         current.previous = null;
+         current.next = null;
         
             } else {
         
-        	current = current.next;
+         current = current.next;
         
             }
       
@@ -314,7 +325,7 @@ public class LinkedList<E> {
         Node<E> p = head.next;
         while ( p != head ) {
             if ( p != head.next ) {
-        	answer.append( "," );
+         answer.append( "," );
             }
             answer.append( p.value );
             p = p.next;
