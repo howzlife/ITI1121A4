@@ -1,8 +1,8 @@
-class A4Q1 {
+public class A4Q1 {
 
-    static boolean equals(LinkedList l1, LinkedList l2) {
-        Object o1, o2;
-        Iterator i1, i2;
+    public static <E> boolean equals(LinkedList<E> l1, LinkedList<E> l2) {
+        E o1, o2;
+        Iterator<E> i1, i2;
 
         //check if either is null. If both are null, returns true. Returns false otherwise
         if (l1 == null || l2 == null)

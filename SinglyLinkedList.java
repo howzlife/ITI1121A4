@@ -79,7 +79,7 @@ public class SinglyLinkedList<E> {
 
     public String toString() {
         StringBuffer answer = new StringBuffer( "[" );
-        Node p = first;
+        Node<E> p = first;
         while ( p != null ) {
             if ( p != first ) {
                 answer.append( "," );

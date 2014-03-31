@@ -58,9 +58,60 @@ public class Distance {
     }
 
     public static double compare( String aSeq, String bSeq ) {
+        Associative<String,Integer> aAsoc, bAsoc;
+        LinkedList<String> aKeys, bKeys;
+        LinkedList<Integer> aVals, bVals;
+        Iterator<String> aKeyIter, bKeyIter;
+        Iterator<Integer> aValIter, bValIter;
+        String aKey, bKey;
+        double result;
+        int alen, blen;
 
-        throw new UnsupportedOperationException( "Replace this statement by your answer to the question!" );
+        alen = aSeq.length();
+        blen = bSeq.length();
 
+        aAsoc = getCounts(aSeq);
+        aKeys = aAsoc.keys();
+        aVals = aAsoc.values();
+        aKeyIter = aKeys.iterator();
+        aValIter = aVals.iterator();
+
+        bAsoc = getCounts(bSeq);
+        bKeys = bAsoc.keys();
+        bVals = bAsoc.values();
+        bKeyIter = bKeys.iterator();
+        bValIter = bVals.iterator();
+
+        result = 0.0;
+        while (aKeyIter.hasNext() && bKeyIter.hasNext()) {
+            aKey = aKeyIter.next();
+            bKey = bKeyIter.next();
+            while (!aKey.equals(bKey)) {
+                while (aKey.compareTo(bKey) < 0) {
+                    result += Math.pow(((double)aValIter.next())/((double)(alen - aKey.length() + 1)), 2);
+                    if (!aKeyIter.hasNext())
+                        break;
+                    aKey = aKeyIter.next();
+                }
+                while (bKey.compareTo(aKey) < 0) {
+                    result += Math.pow(((double)bValIter.next())/((double)(blen - bKey.length() + 1)), 2);
+                    if (!bKeyIter.hasNext())
+                        break;
+                    bKey = bKeyIter.next();
+                }
+            }
+            result += Math.pow((((double)aValIter.next())/((double)(alen - aKey.length() + 1)))
+                               - (((double)bValIter.next())/((double)(blen - bKey.length() + 1))), 2);
+        }
+        while (aKeyIter.hasNext()) {
+            aKey = aKeyIter.next();
+            result += Math.pow(((double)aValIter.next())/((double)(alen - aKey.length() + 1)), 2);
+        }
+        while (bKeyIter.hasNext()) {
+            bKey = bKeyIter.next();
+            result += Math.pow(((double)bValIter.next())/((double)(blen - bKey.length() + 1)), 2);
+        }
+        return result;
     }
 
 }
