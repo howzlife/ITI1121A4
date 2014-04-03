@@ -143,7 +143,35 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
         }
         return value;
     }
+     /** Recursively goes through Binary Search Tree, and arranges keys and values in order
+     *
+     *  @return the list of keys in order
+     */
   
+    private LinkedList<K> keys(LinkedList<K> keyList, Node<K, V> current) {
+    	
+        if (current.left != null) {
+        	keys(keyList, current.left);  	
+        }
+        keyList.addLast(current.key);
+        if (current.right == null) {
+            return keyList;
+        }
+        return keys(keyList, current.right);
+    }
+
+    private LinkedList<V> values(LinkedList<V> valueList, Node<K, V> current) {
+    	
+        if (current.left != null) {
+        	values(valueList, current.left);  	
+        }
+        valueList.addLast(current.value);
+        if (current.right == null) {
+            return valueList;
+        }
+        return values(valueList, current.right);
+    }
+    
     /** Returns the list of keys in order, according to the method compareTo of the key
      *  objects.
      *
@@ -152,49 +180,13 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
 
     public LinkedList<K> keys() {
         LinkedList<K> keyList = new LinkedList<K>();
-        LinkedList<Node<K,V>> nodeList, rightList;
-        Node<K,V> curNode, rightNode;
-        Iterator<Node<K,V>> iter;
 
-        nodeList = new LinkedList<Node<K,V>>();
-        rightList = new LinkedList<Node<K,V>>();
         if (root == null) {
             return keyList;
         }
-
-        nodeList.addLast(root);
-        iter = nodeList.iterator();
-        while (iter.hasNext()) {
-            curNode = iter.next();
-            if (curNode.left != null) {
-                if (curNode.right != null) {
-                    rightList.addLast(curNode.right);
-                    iter.add(curNode.right);
-                    iter.previous();
-                }
-                iter.previous();
-                iter.add(curNode.left);
-                iter.previous();
-            } else if (curNode.right != null) {
-                    iter.add(curNode.right);
-                    iter.previous();
-            } else if (!rightList.isEmpty()){
-                rightNode = rightList.get(0);
-                rightList.remove(rightNode);
-                do {
-                    curNode = iter.next();
-                } while (curNode != rightNode);
-                iter.previous();
-            }
-        }
-
-        iter = nodeList.iterator();
-        while (iter.hasNext()) {
-            keyList.addLast(iter.next().key);
-        }
-        return keyList;
+        return keys(keyList, root);
     }
-
+    
     /** Returns the list of value in the order specified by the method compareTo of the key
      *  objects.
      *
@@ -203,47 +195,11 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
 
     public LinkedList<V> values() {
         LinkedList<V> valueList = new LinkedList<V>();
-        LinkedList<Node<K,V>> nodeList, rightList;
-        Node<K,V> curNode, rightNode;
-        Iterator<Node<K,V>> iter;
-
-        nodeList = new LinkedList<Node<K,V>>();
-        rightList = new LinkedList<Node<K,V>>();
+        
         if (root == null) {
             return valueList;
         }
-
-        nodeList.addLast(root);
-        iter = nodeList.iterator();
-        while (iter.hasNext()) {
-            curNode = iter.next();
-            if (curNode.left != null) {
-                if (curNode.right != null) {
-                    rightList.addLast(curNode.right);
-                    iter.add(curNode.right);
-                    iter.previous();
-                }
-                iter.previous();
-                iter.add(curNode.left);
-                iter.previous();
-            } else if (curNode.right != null) {
-                    iter.add(curNode.right);
-                    iter.previous();
-            } else if (!rightList.isEmpty()){
-                rightNode = rightList.get(0);
-                rightList.remove(rightNode);
-                do {
-                    curNode = iter.next();
-                } while (curNode != rightNode);
-                iter.previous();
-            }
-        }
-
-        iter = nodeList.iterator();
-        while (iter.hasNext()) {
-            valueList.addLast(iter.next().value);
-        }
-        return valueList;
+        return values(valueList, root);
     }
 
     /** Returns the path length of the node containg specified key.  Let
