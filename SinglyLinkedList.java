@@ -31,46 +31,30 @@ public class SinglyLinkedList<E> {
     public boolean isEmpty() { 
         return first == null; 
     }
-
-    private SinglyLinkedList<E> take(SinglyLinkedList<E> sll, int n, Node<E> f) {
-        Node<E> end;
-
-        if (n == 0) {
-            return  sll;
-        }
-
-        end = f;
-        for (int i=n;i>1;i--) {
-            end = end.next;
-        }
-        sll.addFirst(end.value);
-
-        return sll.take(sll, n-1, f);
-    }
-
-    public SinglyLinkedList<E> take( int n ) {
+    private SinglyLinkedList<E> take(int n, Node<E> current) {
         SinglyLinkedList<E> sll;
-        Node<E> end;
-        
-        sll = new SinglyLinkedList<E>();
-        if (n == 0) {
+
+        if (n == 1) {
+            sll = new SinglyLinkedList<E>();
+            sll.addFirst(current.value);
             return sll;
         }
 
-        if (n < 0) {
+        if (current.next != null) {
+            sll = take(n - 1, current.next);
+            sll.addFirst(current.value);
+            return sll;
+        } else throw new IllegalArgumentException();
+    }
+
+    public SinglyLinkedList<E> take( int n ) {
+        if (n == 0) {
+            return new SinglyLinkedList<E>();
+        } else if (n < 0) {
             throw new IllegalArgumentException();
         }
 
-        end = first;
-        for (int i=n;i>1;i--) {
-            if (end.next == null) {
-                throw new IllegalArgumentException();
-            }
-            end = end.next;
-        }
-        sll.addFirst(end.value);
-
-        return sll.take(sll, n-1, first);
+        return this.take(n, first);
     }
 
     //  ----------------------------------------------------------
