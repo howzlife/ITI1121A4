@@ -81,11 +81,11 @@ public class LinkedList<E> {
         }
 
         public boolean hasPrevious() {
-          if (current == head) return false;
-          return true;
+            return current != head;
         }
-    
+
         public E previous() {
+            Node<E> prev;
             checkConcurrentModification();
 
             Node<E> p = head;
@@ -93,156 +93,151 @@ public class LinkedList<E> {
             if ( !hasPrevious()) {
          throw new NoSuchElementException();
             }
-            
-            while (p.next != current.previous) {
-              p = p.next;
-            }
-            
-            current = p.next; // move the cursor backward
-      
-            return current.next.value;
+            prev = current;
+            current = current.previous; // move the cursor backward
+
+            return prev.value;
         }
-    
+
         public void remove() {
             Node<E> after;
             Node<E> before;
 
             checkConcurrentModification();
-            
-            if (current == head) {
-             throw new IllegalArgumentException(); 
+
+            if (!hasPrevious()) {
+                throw new IllegalStateException();
             }
-            
             after = current.next;
             current.next = null;
             before = current.previous;
             current.previous = null;
-            
-            //if (before != null) Note - circular list, so this will never apply. 
+            current = before;
+
+            if (before != null)
                 before.next = after;
            // if (after != null) Note - circular list, so this will never apply
                 after.previous = before;
 
             // Updating variables
-            expectedModCount--;
-            modCount--;
+            expectedModCount++;
+            modCount++;
             size--;
         }
-    
+
         private void checkConcurrentModification() {
             if ( expectedModCount != modCount ) {
-         throw new ConcurrentModificationException();
+              throw new ConcurrentModificationException();
             }
         }
     }
-  
+
     // Instance variables
-  
+
     private Node<E> head;
     private int size;
     private int modCount;
-  
+
     /** Creates a new linked list.
      */
-  
+
     public LinkedList() {
-    
+
         // Representation of the empty list using a dummy node
         head = new Node<E>( null, null, null );
         head.next = head.previous = head;
-    
+
         modCount = 0;
         size = 0;
     }
-  
+
     /** Initializes the content of this list by copying all the
      *  elements of the collection into this list.
      */
-  
+
     //  ----------------------------------------------------------
     //  LinkedList methods
     //  ----------------------------------------------------------
-  
+
     /**
      * Returns an iterator for this list.
      *
      * @return an iterator for this list
      */
-  
+
     public Iterator<E> iterator() {
         return new LinkedListIterator();
     }
-  
+
     /** 
      * Returns the number of elements currently stored in this OrderedStructure.
      *
      * @return the number of elements of this strucutre.
      */
-  
+
     public int size() {
         return size;
     }
-  
+
     /**
      * Returns true if this collection contains no elements.
      *
      * @return true if this collection contains no elements
      */
-  
+
     public boolean isEmpty() {
         return size == 0;
     }
-  
+
     /** 
      * Adds an element at the end of the list.
      *
      * @return true since duplicated values are allowed.
      * @throws IllegalArgumentException if obj is null.
      */
-  
+
     public boolean addLast( E obj ) {
-    
+
         if ( obj == null ) {
             throw new IllegalArgumentException( "null" );
         }
-    
+
         Node<E> before = head.previous;
         Node<E> after = head;
-    
+
         before.next = new Node<E>( obj, before, after );
-        head.previous = before.next;
-    
+        after.previous = before.next;
         modCount++;
         size++;
-    
+
         return true;
     }
-  
+
     /** 
      * Adds an element at the start of the list.
      *
      * @return true since duplicated values are allowed.
      * @throws IllegalArgumentException if obj is null.
      */
-  
+
     public boolean addFirst( E obj ) {
-    
+
         if ( obj == null ) {
             throw new IllegalArgumentException( "null" );
         }
-    
+
         Node<E> before = head;
         Node<E> after = head.next;
-    
+
         before.next = new Node<E>( obj, before, after );
         after.previous = before.next;
-    
+
         modCount++;
         size++;
-    
+
         return true;
     }
-  
+
     /** 
      * Returns the element at the specified position; the first
      * element has the index 0.
@@ -279,10 +274,10 @@ public class LinkedList<E> {
             throw new IllegalArgumentException( "null" );
         }
     
-        Node<E> current = head.next;
+        Node<E> current = head.next; 
         boolean found = false;
     
-        while ( ! found && current != head ) {
+        while ( ! found && current != head ) { //finding the value to remove
       
             if ( o.equals( current.value ) ) {
         

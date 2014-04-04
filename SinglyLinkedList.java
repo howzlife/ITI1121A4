@@ -31,36 +31,30 @@ public class SinglyLinkedList<E> {
     public boolean isEmpty() { 
         return first == null; 
     }
-
-    private SinglyLinkedList<E> take(SinglyLinkedList<E> sll, int n) {
-        Node<E> end;
+    private SinglyLinkedList<E> take(int n, Node<E> current) {  //recursively traverses until the deepest needed element
+        SinglyLinkedList<E> sll = new SinglyLinkedList<E>();    // then adding each element to sll in reverse order 
 
         if (n < 0) throw new IllegalArgumentException();
-        if (n == 0 || isEmpty()) {
+        if (n == 1 || isEmpty()) {
+          sll.addFirst(current.value);
             return  sll;
         }
 
-        end = first;
-        for (int i=n;i>0;i--) {
-            end = end.next;
-        }
-        sll.addFirst(end.value);
-
-        return sll.take(sll, n-1);
+        if (current.next != null) {
+            sll = take(n - 1, current.next);
+            sll.addFirst(current.value);
+            return sll;
+        } else throw new IllegalArgumentException(); //if current.next == null, therefore the amount of elements to be returned is more than the amount of elements in the list
     }
 
     public SinglyLinkedList<E> take( int n ) {
-        SinglyLinkedList<E> sll;
-        Node<E> end;
-        
-        sll = new SinglyLinkedList<E>();
-        end = first;
-        for (int i=n;i>0;i--) {
-            end = end.next;
+        if (n == 0) {
+            return new SinglyLinkedList<E>();
+        } else if (n < 0) {
+            throw new IllegalArgumentException();
         }
-        sll.addFirst(end.value);
 
-        return sll.take(sll, n-1);
+        return this.take(n, first);
     }
 
     //  ----------------------------------------------------------
@@ -69,7 +63,7 @@ public class SinglyLinkedList<E> {
 
     public String toString() {
         StringBuffer answer = new StringBuffer( "[" );
-        Node p = first;
+        Node<E> p = first;
         while ( p != null ) {
             if ( p != first ) {
                 answer.append( "," );

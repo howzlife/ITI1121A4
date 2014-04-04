@@ -1,14 +1,14 @@
-class A4Q1 {
+public class A4Q1 {
 
-    static boolean equals(LinkedList l1, LinkedList l2) {
-        Object o1, o2;
-        Iterator i1, i2;
-        
-        //check if either is null. If both are null, returns true. Returns false otherwise. 
+
+    public static <E> boolean equals(LinkedList<E> l1, LinkedList<E> l2) {
+        E o1, o2;
+        Iterator<E> i1, i2;
+
         if (l1 == null || l2 == null)
             return l1 == l2;
 
-        
+        //assign value returned by next(), and compare between the two lists
         i1 = l1.iterator();
         i2 = l2.iterator();
         while (i1.hasNext() && i2.hasNext()) {
@@ -19,6 +19,7 @@ class A4Q1 {
                 return false;
             }
         }
+        //check if either list still has elements left, while the other doesnt
         if (i1.hasNext() || i2.hasNext()) {
             return false;
         }

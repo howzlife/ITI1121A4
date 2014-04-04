@@ -78,19 +78,19 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
             current.value = fun.apply( old );
         } else if ( test < 0 ) {
             if ( current.left == null ) {
-        	old = null;
-        	current.left = new Node<K,V>( key, fun.apply( old ) );
-        	size++;
+         old = null;
+         current.left = new Node<K,V>( key, fun.apply( old ) );
+         size++;
             } else {
-        	old = update( key, fun, current.left );
+         old = update( key, fun, current.left );
             }
         } else {
             if ( current.right == null ) {
-        	old = null;
-        	current.right = new Node<K,V>( key, fun.apply( old ) );
-        	size++;
+         old = null;
+         current.right = new Node<K,V>( key, fun.apply( old ) );
+         size++;
             } else {
-        	old = update( key, fun, current.right );
+         old = update( key, fun, current.right );
             }
         }
         return old;
@@ -129,21 +129,49 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
       
             if ( test == 0 ) {
         
-        	value = current.value;
+         value = current.value;
         
             } else if ( test < 0 ) {
         
-        	value = get( key, current.left );
+         value = get( key, current.left );
         
             } else {
         
-        	value = get( key, current.right );
+         value = get( key, current.right );
         
             }
         }
         return value;
     }
-  
+     /** Recursively goes through Binary Search Tree, and arranges keys and values in order
+     *
+     *  @return the list of keys in order
+     */
+  //recursively returning the keys, by traversing the list from smallest to largest value
+    private LinkedList<K> keys(LinkedList<K> keyList, Node<K, V> current) {
+     
+        if (current.left != null) {
+         keys(keyList, current.left);   
+        }
+        keyList.addLast(current.key);
+        if (current.right == null) {
+            return keyList;
+        }
+        return keys(keyList, current.right);
+    }
+    //recursively returning the values in order, by traversing from smallest to largest value
+    private LinkedList<V> values(LinkedList<V> valueList, Node<K, V> current) {
+     
+        if (current.left != null) {
+         values(valueList, current.left);   
+        }
+        valueList.addLast(current.value);
+        if (current.right == null) {
+            return valueList;
+        }
+        return values(valueList, current.right);
+    }
+    
     /** Returns the list of keys in order, according to the method compareTo of the key
      *  objects.
      *
@@ -152,26 +180,13 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
 
     public LinkedList<K> keys() {
         LinkedList<K> keyList = new LinkedList<K>();
-        LinkedList<Node<K,V>> nodeList = new LinkedList<Node<K,V>>();
-        Node<K,V> curNode;
-        if (root == null)
-            return keyList;
-        nodeList.addLast(root);
-        Iterator<Node<K,V>> iter = nodeList.iterator();
-        while (iter.hasNext()) {
-            curNode = iter.next();
-            if (curNode.right != null)
-                iter.add(curNode.right);
-            if (curNode.left != null)
-                iter.add(curNode.left);
-        }
-        iter = nodeList.iterator();
-        while (iter.hasNext()) {
-            keyList.addLast(iter.next().key);
-        }
-        return keyList;
-    }
 
+        if (root == null) {
+            return keyList;
+        }
+        return keys(keyList, root);
+    }
+    
     /** Returns the list of value in the order specified by the method compareTo of the key
      *  objects.
      *
@@ -180,21 +195,11 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
 
     public LinkedList<V> values() {
         LinkedList<V> valueList = new LinkedList<V>();
-        LinkedList<Node<K,V>> nodeList = new LinkedList<Node<K,V>>();
-        Node<K,V> curNode;
-        if (root == null)
+        
+        if (root == null) {
             return valueList;
-        nodeList.addLast(root);
-        while (nodeList.size() > 0) {
-            curNode = nodeList.get(0);
-            nodeList.remove(curNode);
-            if (curNode.right != null)
-                nodeList.addFirst(curNode.right);
-            if (curNode.left != null)
-                nodeList.addFirst(curNode.left);
-            valueList.addLast(curNode.value);
         }
-        return valueList;
+        return values(valueList, root);
     }
 
     /** Returns the path length of the node containg specified key.  Let
@@ -206,13 +211,15 @@ public class BinarySearchTree< K extends Comparable<K>, V > implements Associati
      * @param obj the key
      * @return the path length of the specified key
      */
-  
+  //traversing the tree, if both current.left and current.right are null, and we haven't found the corrent key, then the element does not exist in the tree. 
     public int getPathLength( K obj ) {
         int len = 0, l;
         Node<K,V> curNode;
         LinkedList<Node<K,V>> curList, nextList;
-        if (root == null)
+        if (root == null)   //if root is null, then there is no tree to traverse
             return -1;
+        if (obj == null)
+            throw new IllegalArgumentException();
         curList = new LinkedList<Node<K,V>>();
         curList.addLast(root);
         while (true) {
